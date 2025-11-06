@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — JACI</title>
+  <style>
+    :root {
+      --card: #ffffff;
+      --accent: #111;
+      --muted: #666;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ✨ Animated Gradient Background (Stripe-style) */
+    /* ✨ Animated Gradient Background (with pink & orange) */
+  /* ✨ Animated Gradient Background (balanced with pink & orange visible) */
+  body {
+  height: 100vh;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(-45deg, 
+    #0a2540 0%,      /* navy */
+    #3a3d98 20%,     /* indigo */
+    #6270f0 40%,     /* blue-violet */
+    #d946ef 65%,     /* pink-purple */
+    #ff7e5f 85%,     /* orange accent */
+    #ffa751 100%     /* warm orange highlight */
+  );
+  background-size: 500% 500%;
+  animation: gradientFlow 11s ease infinite;
+  display: flex;
+  flex-direction: column;
+  }
+
+  @keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+  }
+
+
+    /* Navbar */
+    nav {
+      width: 100%;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0px 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      height: 80px;
+      width: 80px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+      margin-left: 25px;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #555;
+    }
+
+    /* Main Structure */
+    main {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      height: 100%;
+      padding: 120px 60px 60px;
+    }
+
+    /* Login Card (frosted-glass effect) */
+    .card {
+      width: 100%;
+      max-width: 400px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 30px 26px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      color: var(--accent);
+    }
+
+    p.lead {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    input[type="text"], input[type="email"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #e6e6e9;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    input[type="text"]:focus, input[type="email"]:focus {
+      outline: none;
+      border-color: #cfcfe8;
+      box-shadow: 0 0 0 4px rgba(200, 200, 255, 0.08);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background: #333;
+    }
+
+    .note {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .success {
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      background: #f0fff4;
+      color: #054d2e;
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      main {
+        justify-content: center;
+        padding: 140px 20px;
+      }
+
+      .card {
+        max-width: 90%;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <div class="nav-left">
+      <img src="https://i.ibb.co/GvtK1N9P/Untitled125-20251102203607-2.jpg" alt="JACI logo" class="logo" />
+    </div>
+    <div class="nav-links">
+      <a href="#">Sobre Nós</a>
+      <a href="#">Contato</a>
+      <a href="#">Nosso Trabalho</a>
+      <a href="#">Buscar Ajuda</a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>  
+    <div class="card">
+      <h1>Entrar</h1>
+      <p class="lead">Digite seu nome de usuário e e-mail para continuar.</p>
+
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="username">Nome de Usuário</label>
+          <input id="username" name="username" type="text" autocomplete="username" required minlength="2" placeholder="Seu nome de usuário" aria-describedby="usernameHelp">
+          <div id="usernameHelp" class="note">Escolha um nome com pelo menos 2 caracteres.</div>
+        </div>
+
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input id="email" name="email" type="email" autocomplete="email" required placeholder="voce@exemplo.com">
+        </div>
+
+        <div class="actions">
+          <button type="submit">Entrar</button>
+          <div class="note">Usamos seu e-mail apenas para contato.</div>
+        </div>
+
+        <div id="success" class="success" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </main>
+
+  <!-- Form Script -->
+  <script>
+    const form = document.getElementById('loginForm');
+    const successBox = document.getElementById('success');
+
+    function validarEmail(email) {
+      return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = form.username.value.trim();
+      const email = form.email.value.trim();
+
+      if (username.length < 2) {
+        successBox.style.display = 'block';
+        successBox.style.background = '#fff3f0';
+        successBox.style.color = '#6a1b1b';
+        successBox.textContent = 'O nome de usuário deve ter pelo menos 2 caracteres.';
+        return;
+      }
+
+      if (!validarEmail(email)) {
+        successBox.style.display = 'block';
+        successBox.style.background = '#fff3f0';
+        successBox.style.color = '#6a1b1b';
+        successBox.textContent = 'Por favor, insira um endereço de e-mail válido.';
+        return;
+      }
+
+      successBox.style.display = 'block';
+      successBox.style.background = '#f0fff4';
+      successBox.style.color = '#054d2e';
+      successBox.textContent = `Bem-vindo, ${username}! Um e-mail de confirmação foi enviado para ${email}.`;
+    });
+  </script>
+
+  <!-- Custom Cursor -->
+  <div class="cursor"></div>
+
+  <style>
+    body {
+      cursor: none;
+    }
+
+    .cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 14px;
+      height: 14px;
+      background: radial-gradient(circle, #ffffff 0%, #66ccff 40%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: screen;
+      box-shadow: 0 0 20px #66ccff, 0 0 40px #33aaff, 0 0 60px #0099ff;
+      transition: transform 0.12s ease-out;
+      z-index: 9999;
+    }
+  </style>
+
+  <script>
+    const cursor = document.querySelector('.cursor');
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+    const hoverElements = document.querySelectorAll('a, button');
+    hoverElements.forEach((el) => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.transform = 'translate(-50%, -50%) scale(1.8)';
+        cursor.style.boxShadow = '0 0 30px #00bfff, 0 0 60px #33ccff';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+        cursor.style.boxShadow = '0 0 20px #66ccff, 0 0 40px #33aaff';
+      });
+    });
+  </script>
+
+</body>
+</html>
