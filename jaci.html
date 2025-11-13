@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — JACI</title>
+
+  <!-- Cinzel Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --card: #ffffff;
+      --accent: #111;
+      --muted: #666;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ✨ Soft Gradient Background + Night Sky Image */
+    body {
+      height: 100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(-45deg, #a1ffce, #faffd1);
+      background-size: 400% 400%;
+      animation: gradientFlow 10s ease infinite;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Replaced night sky image */
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url('https://i.pinimg.com/736x/62/6e/4b/626e4b79d251a11d3bc0a0b94ab67ae6.jpg') center/cover no-repeat;
+      opacity: 0.45;
+      z-index: 0;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Navbar */
+    nav {
+      width: 100%;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0px 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      height: 80px;
+      width: 80px;
+    }
+
+    /* Main Structure */
+    main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;
+      padding: 120px 60px 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Left Message */
+    .design-message {
+      max-width: 400px;
+      color: #ffffff;
+      font-family: "Cinzel", serif;
+      font-size: 2rem;
+      font-weight: 600;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    /* Login Card — Gradient background */
+    .card {
+      width: 100%;
+      max-width: 400px;
+      background: linear-gradient(135deg, #B9A2F0, #F7A8B8, #FFD2A5, #FFF7B1);
+      background-size: 200% 200%;
+      animation: cardGradient 8s ease infinite;
+      border-radius: 16px;
+      padding: 30px 26px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      color: #222;
+      position: relative;
+    }
+
+    @keyframes cardGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      color: var(--accent);
+    }
+
+    p.lead {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    input[type="text"], input[type="email"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #e6e6e9;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    input[type="text"]:focus, input[type="email"]:focus {
+      outline: none;
+      border-color: #cfcfe8;
+      box-shadow: 0 0 0 4px rgba(200, 200, 255, 0.08);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background: #333;
+    }
+
+    .note {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .success {
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      background: #f0fff4;
+      color: #054d2e;
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      main {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 140px 20px;
+        gap: 20px;
+      }
+
+      .design-message {
+        font-size: 1.6rem;
+      }
+
+      .card {
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <img src="https://i.ibb.co/GvtK1N9P/Untitled125-20251102203607-2.jpg" alt="JACI logo" class="logo" />
+  </nav>
+
+  <main>  
+    <div class="design-message">Here is everything about design</div>
+
+    <div class="card">
+      <h1>Entrar</h1>
+      <p class="lead">Digite seu nome de usuário e e-mail para continuar.</p>
+
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="username">Nome de Usuário</label>
+          <input id="username" name="username" type="text" required minlength="2" placeholder="Seu nome de usuário">
+          <div class="note">Escolha um nome com pelo menos 2 caracteres.</div>
+        </div>
+
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input id="email" name="email" type="email" required placeholder="voce@exemplo.com">
+        </div>
+
+        <div class="actions">
+          <button type="submit">Entrar</button>
+          <div class="note">Usamos seu e-mail apenas para contato.</div>
+        </div>
+
+        <div id="success" class="success"></div>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const successBox = document.getElementById('success');
+
+    function validarEmail(email) {
+      return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email);
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = form.username.value.trim();
+      const email = form.email.value.trim();
+
+      if (username.length < 2) {
+        successBox.style.display = 'block';
+        successBox.style.background = '#fff3f0';
+        successBox.style.color = '#6a1b1b';
+        successBox.textContent = 'O nome de usuário deve ter pelo menos 2 caracteres.';
+        return;
+      }
+
+      if (!validarEmail(email)) {
+        successBox.style.display = 'block';
+        successBox.style.background = '#fff3f0';
+        successBox.style.color = '#6a1b1b';
+        successBox.textContent = 'Por favor, insira um endereço de e-mail válido.';
+        return;
+      }
+
+      successBox.style.display = 'block';
+      successBox.style.background = '#f0fff4';
+      successBox.style.color = '#054d2e';
+      successBox.textContent = `Bem-vindo, ${username}! Um e-mail de confirmação foi enviado para ${email}.`;
+    });
+  </script>
+</body>
+</html>
