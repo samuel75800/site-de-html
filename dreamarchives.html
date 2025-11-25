@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dream Archives — Login</title>
+  <style>
+    :root{
+      --bg1:#0f0520; /* deep night */
+      --bg2:#2b1a44; /* purple dusk */
+      --glass: rgba(255,255,255,0.06);
+      --accent1: #ffd9a6; /* warm cream */
+      --accent2: #caa6ff; /* pastel lilac */
+      --accent3: #ffb7d5; /* pastel pink */
+    }
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;}
+    body{
+      background: radial-gradient(1200px 600px at 10% 20%, rgba(255,183,213,0.08), transparent 10%),
+                  radial-gradient(1000px 500px at 90% 80%, rgba(202,166,255,0.06), transparent 15%),
+                  linear-gradient(180deg,var(--bg1) 0%, var(--bg2) 80%);
+      color: #efe9ff;
+      overflow:hidden;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* starfield canvas sits behind everything */
+    #starfield{position:fixed;inset:0;z-index:0;pointer-events:none;filter:blur(0.6px) saturate(1.1);}
+
+    /* floating orbs (dreams) */
+    .orbs{position:fixed;inset:0;z-index:1;pointer-events:none}
+    .orb{
+      position:absolute;border-radius:50%;
+      width:220px;height:220px;transform:translate(-50%,-50%);
+      background-size:cover;background-position:center;
+      box-shadow:0 30px 80px rgba(16,8,40,0.6), inset 0 0 40px rgba(255,255,255,0.02);
+      mix-blend-mode:screen;opacity:0.95;backdrop-filter:blur(6px);
+      transition: transform 450ms cubic-bezier(.2,.9,.22,1), box-shadow 250ms;
+    }
+    .orb:hover{transform:translate(-50%,-50%) scale(1.08);box-shadow:0 40px 120px rgba(80,40,120,0.5)}
+
+    /* login area */
+    .wrap{position:relative;z-index:5;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:48px}
+    .card{
+      width:420px;max-width:92%;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:28px;backdrop-filter: blur(8px);
+      box-shadow: 0 10px 40px rgba(4,2,14,0.6);
+      position:relative;overflow:hidden
+    }
+
+    /* logo */
+    .logo{display:flex;gap:14px;align-items:center;margin-bottom:6px}
+    .logo img{width:56px;height:56px;border-radius:12px;object-fit:cover;box-shadow:0 6px 20px rgba(0,0,0,0.45)}
+    .brand{font-family: 'Cinzel', serif;font-weight:600;font-size:20px;letter-spacing:1px}
+    .tag{font-size:12px;color:rgba(255,255,255,0.6);margin-top:-2px}
+
+    h1{margin:8px 0 18px;font-size:20px}
+
+    .inputs{display:flex;flex-direction:column;gap:12px}
+    .field{position:relative}
+    input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));color:inherit;outline:none;font-size:14px}
+    input::placeholder{color:rgba(255,255,255,0.4)}
+    .row{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+
+    .btn{
+      display:inline-grid;place-items:center;padding:12px 18px;border-radius:12px;border:0;margin-top:8px;cursor:pointer;font-weight:600;
+      background:linear-gradient(90deg,var(--accent2),var(--accent3));color:#1a0520;box-shadow:0 10px 30px rgba(170,120,220,0.14), inset 0 -2px 12px rgba(255,255,255,0.06);
+      transition:transform .18s ease, box-shadow .18s ease;
+    }
+    .btn:active{transform:translateY(1px)}
+
+    .small{font-size:13px;color:rgba(255,255,255,0.7)}
+
+    /* decorative footer images */
+    .gallery{display:flex;gap:8px;margin-top:14px}
+    .gallery img{width:48px;height:48px;border-radius:8px;object-fit:cover;border:1px solid rgba(255,255,255,0.04)}
+
+    /* custom cursor */
+    .cursor{position:fixed;left:0;top:0;z-index:9999;pointer-events:none;width:28px;height:28px;border-radius:50%;transform:translate(-50%,-50%);display:grid;place-items:center;mix-blend-mode:screen}
+    .cursor .inner{width:10px;height:10px;border-radius:50%;background:linear-gradient(180deg,var(--accent1),var(--accent3));box-shadow:0 6px 20px rgba(255,160,200,0.3)}
+
+    /* small responsiveness */
+    @media (max-width:480px){
+      .card{padding:20px}
+      .logo img{width:46px;height:46px}
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- starfield -->
+  <canvas id="starfield"></canvas>
+
+  <!-- floating dream orbs using external images -->
+  <div class="orbs">
+    <div class="orb" id="orb1" style="left:12%;top:18%;width:260px;height:260px;background-image:url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=80')"></div>
+    <div class="orb" id="orb2" style="left:84%;top:10%;width:200px;height:200px;background-image:url('https://images.unsplash.com/photo-1495563381401-ecfbcaaa4f93?auto=format&fit=crop&w=1200&q=80')"></div>
+    <div class="orb" id="orb3" style="left:72%;top:66%;width:320px;height:320px;background-image:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80')"></div>
+    <div class="orb" id="orb4" style="left:28%;top:76%;width:180px;height:180px;background-image:url('https://images.unsplash.com/photo-1505678261036-a3fcc5e884ee?auto=format&fit=crop&w=1200&q=80')"></div>
+  </div>
+
+  <div class="wrap">
+    <div class="card" role="main" aria-labelledby="login-title">
+      <div class="logo">
+        <!-- local logo image provided earlier (local path) -->
+        <img src='dream archives.png' alt="Dream Archives logo" />
+        <div>
+          <div class="brand">DREAM ARCHIVES</div>
+          <div class="tag small">A quiet place to store your dreams</div>
+        </div>
+      </div>
+
+      <h1 id="login-title">Welcome back — enter the archive</h1>
+
+      <form id="loginForm" class="inputs" onsubmit="return false;">
+        <div class="field">
+          <input id="username" placeholder="Your dream name (nickname)" autocomplete="username" required />
+        </div>
+        <div class="field">
+          <input id="password" type="password" placeholder="Passphrase (keeps memories safe)" autocomplete="current-password" required />
+        </div>
+
+        <div class="row">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="remember"> <span class="small">Remember this dreamer</span></label>
+          <a href="#" class="small" style="color:rgba(255,255,255,0.8);text-decoration:none">Forgot?</a>
+        </div>
+
+        <a href="dreamarchiveshome.html">
+    <button class="login-btn">Enter the Archive</button>
+        </a>
+
+
+        <div class="gallery" aria-hidden>
+          <!-- small external images as visual cues / credits -->
+          <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=400&q=60" alt="dream sample 1">
+          <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=400&q=60" alt="dream sample 2">
+          <img src="https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=400&q=60" alt="dream sample 3">
+          <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=400&q=60" alt="dream sample 4">
+        </div>
+
+        <p class="small" style="margin-top:10px;opacity:0.8">Tip: hover the orbs to preview a memory.</p>
+      </form>
+
+      <!-- subtle floating grain overlay -->
+      <svg style="position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;opacity:0.06" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+        <filter id="grain"><feTurbulence baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+        <rect width="100%" height="100%" filter="url(#grain)" fill="#fff"/>
+      </svg>
+
+    </div>
+  </div>
+
+  <!-- custom cursor element -->
+  <div class="cursor" id="cursor"><div class="inner"></div></div>
+
+  <script>
+    // ---- starfield ----
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    let W = canvas.width = innerWidth;
+    let H = canvas.height = innerHeight;
+
+    window.addEventListener('resize', ()=>{W=canvas.width=innerWidth;H=canvas.height=innerHeight;initStars();});
+
+    const stars = [];
+    function initStars(){
+      stars.length=0;const count = Math.floor((W*H)/90000)+80;
+      for(let i=0;i<count;i++){
+        stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+0.2,alpha:Math.random()*0.9});
+      }
+    }
+    function drawStars(){
+      ctx.clearRect(0,0,W,H);
+      for(const s of stars){
+        ctx.beginPath();ctx.globalAlpha=s.alpha*0.9;ctx.fillStyle='#fff';ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+      }
+      ctx.globalAlpha=1;
+    }
+    initStars();
+    (function anim(){
+      for(const s of stars){s.y -= 0.15; if(s.y < -10) s.y = H + 10;}
+      drawStars();requestAnimationFrame(anim);
+    })();
+
+    // ---- smooth floating orbs animation ----
+    const orbs = document.querySelectorAll('.orb');
+    orbs.forEach((o,i)=>{
+      const amplitude = 20 + Math.random()*80;
+      const speed = 20000 + Math.random()*20000;
+      const start = Math.random()*10000;
+      (function float(){
+        const t = Date.now()+start;
+        const dx = Math.sin(t/speed)*amplitude;
+        const dy = Math.cos(t/(speed*1.2))*(amplitude*0.6);
+        o.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+        requestAnimationFrame(float);
+      })();
+
+      // preview on hover: blur all others
+      o.addEventListener('mouseenter', ()=>{o.style.filter='saturate(1.08) drop-shadow(0 30px 80px rgba(80,40,120,0.45))';});
+      o.addEventListener('mouseleave', ()=>{o.style.filter='';});
+    });
+
+    // ---- custom cursor with trail ----
+    const cursor = document.getElementById('cursor');
+    let mouseX = innerWidth/2, mouseY = innerHeight/2, curX=mouseX, curY=mouseY;
+    window.addEventListener('mousemove', (e)=>{mouseX=e.clientX;mouseY=e.clientY;cursor.style.display='grid';});
+    function updateCursor(){curX += (mouseX - curX) * 0.18; curY += (mouseY - curY) * 0.18; cursor.style.left = curX + 'px'; cursor.style.top = curY + 'px'; requestAnimationFrame(updateCursor);} updateCursor();
+
+    // cursor hover effects for interactive elements
+    const interactive = document.querySelectorAll('button, a, input, .orb');
+    interactive.forEach(el=>{
+      el.addEventListener('mouseenter', ()=>{cursor.style.transform='scale(1.6)'; cursor.style.opacity='0.95';});
+      el.addEventListener('mouseleave', ()=>{cursor.style.transform='scale(1)'; cursor.style.opacity='1';});
+    });
+
+    // ---- floating pastel gradient behind hover for login button ----
+    const loginBtn = document.getElementById('loginBtn');
+    loginBtn.addEventListener('click', ()=>{
+      // simple form playful validation animation
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      if(!user || !pass){
+        loginBtn.animate([{transform:'translateY(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateY(0)'}],{duration:420});
+        return;
+      }
+      loginBtn.innerText='Opening archive...';
+      loginBtn.disabled=true;
+      setTimeout(()=>{
+        // simple success micro-animation
+        loginBtn.innerText='Entered ✨';
+        loginBtn.animate([{transform:'scale(1)'},{transform:'scale(1.04)'},{transform:'scale(1)'}],{duration:600});
+      },1000);
+    });
+
+    // ---- small accessibility: focus outlines ----
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Tab') document.body.classList.add('showFocus'); });
+
+    // ---- optional: click orb to preview large (modal) ----
+    function createModal(imgUrl){
+      const modal = document.createElement('div');modal.style.position='fixed';modal.style.inset=0;modal.style.display='grid';modal.style.placeItems='center';modal.style.background='linear-gradient(180deg, rgba(10,6,20,0.6), rgba(6,2,16,0.86))';modal.style.zIndex=9998;
+      const box = document.createElement('div');box.style.width='min(86%,880px)';box.style.maxHeight='86vh';box.style.borderRadius='14px';box.style.overflow='hidden';box.style.boxShadow='0 40px 120px rgba(8,4,30,0.8)';
+      const im = document.createElement('img');im.src=imgUrl;im.style.width='100%';im.style.height='auto';im.style.display='block';im.alt='orb preview';
+      box.appendChild(im);modal.appendChild(box);document.body.appendChild(modal);
+      modal.addEventListener('click', ()=>modal.remove());
+    }
+    orbs.forEach(o=>{
+      o.style.cursor='pointer';
+      o.addEventListener('click', ()=>createModal(o.style.backgroundImage.slice(5,-2)));
+    });
+
+    // ---- reduce-motion preference respect ----
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if(mq.matches){
+      // stop animations
+      stars.length=0;orbs.forEach(o=>o.style.transition='none');
+    }
+  </script>
+</body>
+</html>
